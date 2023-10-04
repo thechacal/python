@@ -1,5 +1,6 @@
 '''
 Exercício 1
+
 Uma empresa comercial possui um programa para controle das receitas e despesas em seus 10 projetos. 
 Os projetos são numerados de 0 até 9. 
 Faça um programa C que controle a entrada e saída de recursos dos projetos. 
@@ -12,56 +13,40 @@ Ao final do programa, imprirmir o saldo final de cada projeto.
 Dica: Usar uma estrutura do tipo vetor para controlar os saldos dos projetos. 
 Usar o conceito de struct para agrupar as informações lidas.
 '''
+# Define a classe Projeto
 class Projeto:
-    def __init__(self, num):
-        self.numero = num
-        self.saldo = 0
+    def __init__(self, numero):
+        self.numero = numero  # Inicializa o número do projeto
+        self.saldo = 0  # Inicializa o saldo do projeto como zero
 
-    def atualizar_saldo(self, valor, tipo_despesa):
-        if tipo_despesa.upper() == 'R':
-            self.saldo += valor
-        elif tipo_despesa.upper() == 'D':
-            self.saldo -= valor
+    def registrar_movimentacao(self, valor, tipo):
+        if tipo == "R":
+            self.saldo += valor  # Se o tipo for "R", adiciona o valor ao saldo
+        elif tipo == "D":
+            self.saldo -= valor  # Se o tipo for "D", subtrai o valor do saldo
         else:
-            print("Tipo de despesa inválido! Use 'R' para Receita ou 'D' para Despesa.")
+            print("Tipo inválido. Use 'R' para Receita ou 'D' para Despesa.")  # Mensagem de erro para tipos inválidos
 
-class ControleProjetos:
-    def __init__(self):
-        self.projetos = []
+# Cria uma lista de 10 projetos, numerados de 0 a 9, usando list comprehension
+projetos = [Projeto(i) for i in range(10)]
 
-    def adicionar_projeto(self, projeto):
-        self.projetos.append(projeto)
+# Entra em um loop que permite registrar movimentações para os projetos
+while True:
+    numero_projeto = int(input("Digite o número do projeto (-1 para sair): "))
+    
+    # Verifica se deve sair do loop
+    if numero_projeto == -1:
+        break
+    
+    valor = float(input("Digite o valor: "))  # Lê o valor da movimentação
+    tipo = input("Digite o tipo (R para Receita, D para Despesa): ").upper()  # Lê o tipo da movimentação e converte para maiúsculas
+    
+    # Valida o número do projeto
+    if 0 <= numero_projeto < 10:
+        projetos[numero_projeto].registrar_movimentacao(valor, tipo)  # Registra a movimentação no projeto correspondente
+    else:
+        print("Número de projeto inválido. Digite um número entre 0 e 9.")  # Mensagem de erro para números de projeto inválidos
 
-    def executar(self):
-        while True:
-            numero_projeto = int(input("Digite o número do projeto (-1 para encerrar): "))
-
-            if numero_projeto == -1:
-                break
-
-            valor = float(input("Digite o valor: "))
-            tipo_despesa = input("Digite o tipo de despesa (R - Receita, D - Despesa): ").upper()
-
-            projeto_encontrado = False
-            for projeto in self.projetos:
-                if projeto.numero == numero_projeto:
-                    projeto.atualizar_saldo(valor, tipo_despesa)
-                    projeto_encontrado = True
-                    break
-
-            if not projeto_encontrado:
-                print("Projeto não encontrado!")
-
-    def imprimir_saldos(self):
-        print("\nSaldo final de cada projeto:")
-        for projeto in self.projetos:
-            print(f"Projeto {projeto.numero}: R$ {projeto.saldo}")
-
-controle_projetos = ControleProjetos()
-
-NUM_PROJETOS = 10
-for i in range(NUM_PROJETOS):
-    controle_projetos.adicionar_projeto(Projeto(i))
-
-controle_projetos.executar()
-controle_projetos.imprimir_saldos()
+# Imprime os saldos finais de cada projeto
+for projeto in projetos:
+    print(f"Projeto {projeto.numero}: Saldo final = {projeto.saldo}")  # Imprime o saldo final de cada projeto
